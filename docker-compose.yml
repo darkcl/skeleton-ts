@@ -5,10 +5,18 @@ services:
     build:
       context: .
     command: npm run debug
+    environment:
+      - HOST_ENV=local
+      - MONGODB_HOST=mongo
+      - MONGODB_PORT=27017
+      - MONGODB_DB_NAME=skeleton
+      - PORT=3000
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - GRAPHITE_HOST=plaintext://graphite:2003
+      - LOG_DIR=/tmp/skeleton/
+      - ENABLE_CONSOLE_LOG=1
     volumes:
       - ./dist:/server/dist
-    depends_on:
-      - sonar
     ports:
       - "3101:3000"
       - "9222:9222"
