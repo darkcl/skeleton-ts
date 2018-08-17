@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "*": ["node_modules/*", "app/types/*"]
+    },
+    "allowJs": true,
+    "typeRoots": ["node_modules/@types"],
+    "experimentalDecorators": true
+  },
+  "include": ["app/**/*"]
+}

@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+    command: npm run debug
+    volumes:
+      - ./dist:/server/dist
+    depends_on:
+      - sonar
+    ports:
+      - "3101:3000"
+      - "9222:9222"

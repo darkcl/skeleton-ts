@@ -1,0 +1,16 @@
+version: "2.1"
+
+services:
+  api:
+    build: .
+    entrypoint: npm run start
+  itest:
+    image: apiaryio/dredd
+    working_dir: /api
+    volumes:
+      - ./suport/dredd.yml:/api/dredd.yml
+      - ./docs:/api/docs
+      - ./report:/api/report
+      - ./suport/dredd-hooks:/api/dredd-hooks
+    depends_on:
+      - api

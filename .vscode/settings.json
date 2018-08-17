@@ -1,0 +1,8 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "prettier.eslintIntegration": true,
+  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "docker.attachShellCommand.linuxContainer": "/bin/bash"
+}

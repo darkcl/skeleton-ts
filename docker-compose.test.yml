@@ -1,0 +1,9 @@
+version: "3.2"
+
+services:
+  test:
+    build: .
+    entrypoint: "npm run test-bamboo"
+    volumes:
+      - ./coverage:/server/coverage
+      - ./report:/server/report
