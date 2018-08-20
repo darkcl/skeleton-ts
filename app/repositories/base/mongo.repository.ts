@@ -32,8 +32,8 @@ export abstract class MongoRepository<T> extends BaseRepository<T> {
 		throw new Error('Method not implemented.');
 	}
 
-	find(item: T): Promise<T[]> {
-		throw new Error('Method not implemented.');
+	async find(item: T): Promise<T[]> {
+		return this.collection.find(item).toArray();
 	}
 
 	async findOne(id: string | ObjectID): Promise<T> {

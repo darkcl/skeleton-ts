@@ -31,4 +31,9 @@ export class TodoRepository extends MongoRepository<ITodo> {
 			throw e;
 		}
 	}
+
+	public async findAllTodos(): Promise<ITodo[]> {
+		const result = await this.find(null);
+		return result.map((val) => TodoMongoEntity.asTodo(val));
+	}
 }
