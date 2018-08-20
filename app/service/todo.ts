@@ -10,4 +10,8 @@ export class TodoService {
 	public async createTodo(description: string): Promise<ITodo> {
 		return this.todoRepo.createTodoItem(description);
 	}
+
+	public async getTodo(id: string): Promise<ITodo> {
+		return this.todoRepo.findTodo(id);
+	}
 }

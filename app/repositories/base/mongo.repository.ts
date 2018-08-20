@@ -1,6 +1,7 @@
 import { BaseRepository } from './base.repository';
-import { Db, Collection, InsertOneWriteOpResult } from 'mongodb';
+import { Collection, InsertOneWriteOpResult, ObjectID } from 'mongodb';
 import { injectable } from 'inversify';
+import { ResponseError, ErrorCode, ErrorDomain } from '../../common/error_object';
 
 @injectable()
 export abstract class MongoRepository<T> extends BaseRepository<T> {
@@ -14,7 +15,10 @@ export abstract class MongoRepository<T> extends BaseRepository<T> {
 		const result: InsertOneWriteOpResult = await this.collection.insertOne(item);
 
 		if (result.result.ok !== 1) {
-			throw new Error('Error when create record');
+			const error: ResponseError = new Error('Error when create record') as ResponseError;
+			error.code = ErrorCode.InternalError;
+			error.domain = ErrorDomain.MongoDBCreation;
+			throw error;
 		} else {
 			return item;
 		}
@@ -32,7 +36,15 @@ export abstract class MongoRepository<T> extends BaseRepository<T> {
 		throw new Error('Method not implemented.');
 	}
 
-	findOne(id: string): Promise<T> {
-		throw new Error('Method not implemented.');
+	async findOne(id: string | ObjectID): Promise<T> {
+		const result = await this.collection.findOne({ _id: id });
+		if (result !== null) {
+			return result;
+		} else {
+			const error: ResponseError = new Error('Record Not Found') as ResponseError;
+			error.code = ErrorCode.NotFound;
+			error.domain = ErrorDomain.MongoDBQuery;
+			throw error;
+		}
 	}
 }

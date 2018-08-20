@@ -12,6 +12,12 @@ export class TodoController extends BaseHttpController {
 		super();
 	}
 
+	@httpGet('/:id')
+	public async getTodo(@request() req: Request, @response() res: Response) {
+		const result: DataObject<ITodo> = new DataObject(await this.todoService.getTodo(req.params.id), 200);
+		res.status(result.status).send(result.asJson());
+	}
+
 	@httpPost('/')
 	public async createTodo(@request() req: Request, @response() res: Response) {
 		const result: DataObject<ITodo> = new DataObject(await this.todoService.createTodo('something'), 201);
