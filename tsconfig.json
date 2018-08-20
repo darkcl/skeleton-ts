@@ -10,7 +10,8 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "baseUrl": "./",
-    "allowJs": true
+    "allowJs": true,
+    "types": [ "node", "mocha", "chai" ]
   },
   "compileOnSave": false,
   "include": ["app/**/*"],

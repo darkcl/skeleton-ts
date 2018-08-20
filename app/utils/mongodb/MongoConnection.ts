@@ -14,20 +14,24 @@ export class MongoDBConnection {
 		}
 	}
 
-	public static async connect(): Promise<Db> {
-		const mongoDbHost = process.env.MONGODB_HOST || 'localhost';
-		const mongoDbPort = process.env.MONGODB_PORT || 27017;
-		const mongoDbName = process.env.MONGODB_DB_NAME || 'skeleton-ts';
-
+	public static async connect(
+		mongoDbHost: string = process.env.MONGODB_HOST || 'localhost',
+		mongoDbPort = process.env.MONGODB_PORT || 27017,
+		mongoDbName: string = process.env.MONGODB_DB_NAME || 'skeleton-ts',
+		mongoUser: string = process.env.MONGODB_USER || null,
+		mongoPassword: string = process.env.MONGODB_PASS || null,
+		rsName: string = process.env.MONGODB_REPLSET_NAME || null,
+		mongoUri: string = process.env.MONGODB_URI
+	): Promise<Db> {
 		const mongoDbUri =
-			process.env.MONGODB_URI ||
+			mongoUri ||
 			MongoURIBuilder.build({
 				hosts: await DNSResolver.resovle(mongoDbHost),
 				port: mongoDbPort,
 				database: mongoDbName,
-				username: process.env.MONGODB_USER || null,
-				password: process.env.MONGODB_PASS || null,
-				rsName: process.env.MONGODB_REPLSET_NAME || null
+				username: mongoUser,
+				password: mongoPassword,
+				rsName: rsName
 			});
 		const client: MongoClient = await MongoClient.connect(mongoDbUri, { useNewUrlParser: true });
 		this.db = client.db(mongoDbName);
