@@ -18,4 +18,8 @@ export class TodoService {
 	public async getTodo(id: string): Promise<ITodo> {
 		return this.todoRepo.findTodo(id);
 	}
+
+	public async deleteTodo(id: string): Promise<boolean> {
+		return this.todoRepo.removeTodo(id);
+	}
 }

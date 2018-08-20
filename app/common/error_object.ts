@@ -8,6 +8,7 @@ export interface ResponseError extends Error {
 export enum ErrorDomain {
 	RequestValidation = 'REQUEST_VALIDATION',
 	MongoDBCreation = 'MONGO_CREATION',
+	MongoDBDelete = 'MONGO_DELETE',
 	MongoSchemaValidation = 'MONGO_SCHEMA_VALIDATION',
 	MongoDBQuery = 'MONGO_QUERY',
 

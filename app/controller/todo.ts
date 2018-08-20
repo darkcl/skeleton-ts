@@ -1,4 +1,12 @@
-import { controller, httpGet, BaseHttpController, request, response, httpPost } from 'inversify-express-utils';
+import {
+	controller,
+	httpGet,
+	BaseHttpController,
+	request,
+	response,
+	httpPost,
+	httpDelete
+} from 'inversify-express-utils';
 import { inject } from 'inversify';
 import { Request, Response } from 'express';
 import TYPES from '../constant/types';
@@ -23,6 +31,18 @@ export class TodoController extends BaseHttpController {
 	public async getTodo(@request() req: Request, @response() res: Response) {
 		const result: DataObject<ITodo> = new DataObject(await this.todoService.getTodo(req.params.id), 200);
 		res.status(result.status).send(result.asJson());
+	}
+
+	@httpDelete('/:id')
+	public async deleteTodo(@request() req: Request, @response() res: Response) {
+		const result: ITodo = await this.todoService.getTodo(req.params.id);
+		console.log(result);
+		if (result !== null) {
+			await this.todoService.deleteTodo(req.params.id);
+			res.status(204);
+		} else {
+			throw new Error('Record Not Found');
+		}
 	}
 
 	@httpPost('/')

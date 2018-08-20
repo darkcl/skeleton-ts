@@ -1,7 +1,7 @@
 export interface IWrite<T> {
 	create(item: T): Promise<T>;
 	update(item: T): Promise<T>;
-	remove(item: T): Promise<boolean>;
+	remove(id: string): Promise<boolean>;
 }
 
 export interface IRead<T> {

@@ -9,7 +9,7 @@ export abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
 	update(item: T): Promise<T> {
 		throw new Error('Method not implemented.');
 	}
-	remove(item: T): Promise<boolean> {
+	remove(id: string): Promise<boolean> {
 		throw new Error('Method not implemented.');
 	}
 	find(item: T): Promise<T[]> {

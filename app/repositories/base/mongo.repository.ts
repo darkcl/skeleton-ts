@@ -1,5 +1,5 @@
 import { BaseRepository } from './base.repository';
-import { Collection, InsertOneWriteOpResult, ObjectID } from 'mongodb';
+import { Collection, InsertOneWriteOpResult, ObjectID, DeleteWriteOpResultObject } from 'mongodb';
 import { injectable } from 'inversify';
 import { ResponseError, ErrorCode, ErrorDomain } from '../../common/error_object';
 
@@ -28,8 +28,16 @@ export abstract class MongoRepository<T> extends BaseRepository<T> {
 		throw new Error('Method not implemented.');
 	}
 
-	delete(id: string): Promise<boolean> {
-		throw new Error('Method not implemented.');
+	async remove(id: string | ObjectID): Promise<boolean> {
+		const result: DeleteWriteOpResultObject = await this.collection.deleteOne({ _id: id });
+		if (result.result.ok !== 1 || result.deletedCount === 0) {
+			const error: ResponseError = new Error('Error when delete record') as ResponseError;
+			error.code = ErrorCode.InternalError;
+			error.domain = ErrorDomain.MongoDBDelete;
+			throw error;
+		} else {
+			return true;
+		}
 	}
 
 	async find(item: T): Promise<T[]> {
