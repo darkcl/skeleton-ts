@@ -1,5 +1,5 @@
 const TYPES = {
-  SessionService: Symbol.for("SessionService"),
+	TodoService: Symbol.for('TodoService')
 };
 
 export default TYPES;

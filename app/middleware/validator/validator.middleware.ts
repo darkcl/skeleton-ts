@@ -1,5 +1,3 @@
-import * as Joi from "joi";
-
 import {
   RequestHandler,
   Request,

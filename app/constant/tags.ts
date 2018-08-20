@@ -1,6 +1,3 @@
-const TAGS = {
-  HealthController: "HealthController",
-  SessionController: "SessionController"
-};
+const TAGS = {};
 
 export default TAGS;
