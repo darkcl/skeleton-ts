@@ -9,6 +9,7 @@ export enum ErrorDomain {
 	RequestValidation = 'REQUEST_VALIDATION',
 	MongoDBCreation = 'MONGO_CREATION',
 	MongoDBDelete = 'MONGO_DELETE',
+	MongoDBUpdate = 'MONGO_UPDATE',
 	MongoSchemaValidation = 'MONGO_SCHEMA_VALIDATION',
 	MongoDBQuery = 'MONGO_QUERY',
 

@@ -6,7 +6,7 @@ export abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
 	create(item: T): Promise<T> {
 		throw new Error('Method not implemented.');
 	}
-	update(item: T): Promise<T> {
+	update(id: string, item: T): Promise<T> {
 		throw new Error('Method not implemented.');
 	}
 	remove(id: string): Promise<boolean> {

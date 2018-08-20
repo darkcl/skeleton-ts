@@ -5,7 +5,8 @@ import {
 	request,
 	response,
 	httpPost,
-	httpDelete
+	httpDelete,
+	httpPatch
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
 import { Request, Response } from 'express';
@@ -31,6 +32,23 @@ export class TodoController extends BaseHttpController {
 	public async getTodo(@request() req: Request, @response() res: Response) {
 		const result: DataObject<ITodo> = new DataObject(await this.todoService.getTodo(req.params.id), 200);
 		res.status(result.status).send(result.asJson());
+	}
+
+	@httpPatch('/:id')
+	public async updateTodo(@request() req: Request, @response() res: Response) {
+		const description: string = req.body.description;
+		if (description !== null && description !== undefined) {
+			const result: DataObject<ITodo> = new DataObject(
+				await this.todoService.updateTodo(req.params.id, description),
+				201
+			);
+			res.status(result.status).send(result.asJson());
+		} else {
+			const err: ResponseError = new Error('Bad Request') as ResponseError;
+			err.code = ErrorCode.BadRequest;
+			err.domain = ErrorDomain.RequestValidation;
+			throw err;
+		}
 	}
 
 	@httpDelete('/:id')

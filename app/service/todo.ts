@@ -19,6 +19,10 @@ export class TodoService {
 		return this.todoRepo.findTodo(id);
 	}
 
+	public async updateTodo(id: string, description: string): Promise<ITodo> {
+		return this.todoRepo.updateTodo(id, description);
+	}
+
 	public async deleteTodo(id: string): Promise<boolean> {
 		return this.todoRepo.removeTodo(id);
 	}

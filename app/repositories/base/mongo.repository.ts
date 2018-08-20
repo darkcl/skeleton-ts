@@ -1,5 +1,5 @@
 import { BaseRepository } from './base.repository';
-import { Collection, InsertOneWriteOpResult, ObjectID, DeleteWriteOpResultObject } from 'mongodb';
+import { Collection, InsertOneWriteOpResult, ObjectID, DeleteWriteOpResultObject, UpdateWriteOpResult } from 'mongodb';
 import { injectable } from 'inversify';
 import { ResponseError, ErrorCode, ErrorDomain } from '../../common/error_object';
 
@@ -24,8 +24,17 @@ export abstract class MongoRepository<T> extends BaseRepository<T> {
 		}
 	}
 
-	update(item: T): Promise<T> {
-		throw new Error('Method not implemented.');
+	async update(id: string | ObjectID, item: T | any): Promise<T> {
+		const result: UpdateWriteOpResult = await this.collection.updateOne({ _id: id }, { $set: item });
+		if (result.result.ok !== 1) {
+			console.log(result);
+			const error: ResponseError = new Error('Error when update record') as ResponseError;
+			error.code = ErrorCode.InternalError;
+			error.domain = ErrorDomain.MongoDBUpdate;
+			throw error;
+		} else {
+			return item;
+		}
 	}
 
 	async remove(id: string | ObjectID): Promise<boolean> {

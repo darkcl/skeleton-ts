@@ -32,6 +32,23 @@ export class TodoRepository extends MongoRepository<ITodo> {
 		}
 	}
 
+	public async updateTodo(id: string, description: string): Promise<ITodo> {
+		try {
+			const objectId: ObjectID = new ObjectID(id);
+			const result: ITodo = await this.update(objectId, { description: description });
+			result.id = id;
+			return result;
+		} catch (e) {
+			const err: ResponseError = e as ResponseError;
+			if (err.domain !== ErrorDomain.MongoDBUpdate) {
+				err.domain = ErrorDomain.MongoDBQuery;
+				err.code = ErrorCode.BadRequest;
+				err.message = 'Invaild ObjectId';
+			}
+			throw e;
+		}
+	}
+
 	public async findTodo(id: string): Promise<ITodo> {
 		try {
 			const objectId: ObjectID = new ObjectID(id);
