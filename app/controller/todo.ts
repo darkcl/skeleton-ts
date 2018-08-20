@@ -3,7 +3,8 @@ import { inject } from 'inversify';
 import { Request, Response } from 'express';
 import TYPES from '../constant/types';
 import { DataObject } from '../common';
-import { ITodo, TodoService } from '../service/todo';
+import { TodoService } from '../service/todo';
+import { ITodo } from '../repositories/entities/todo';
 
 @controller('/todo')
 export class TodoController extends BaseHttpController {

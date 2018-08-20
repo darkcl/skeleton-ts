@@ -1,6 +1,10 @@
 version: "3"
 
 services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
   api:
     build:
       context: .
@@ -15,6 +19,8 @@ services:
       - GRAPHITE_HOST=plaintext://graphite:2003
       - LOG_DIR=/tmp/skeleton/
       - ENABLE_CONSOLE_LOG=1
+    depends_on:
+      - mongo
     volumes:
       - ./dist:/server/dist
     ports:

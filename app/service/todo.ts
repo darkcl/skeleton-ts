@@ -1,13 +1,13 @@
 import { injectable, inject } from 'inversify';
-
-export interface ITodo {
-	id: string;
-	description: string;
-}
+import TYPES from '../constant/types';
+import { TodoRepository } from '../repositories/todo.repository';
+import { ITodo } from '../repositories/entities/todo';
 
 @injectable()
 export class TodoService {
+	constructor(@inject(TYPES.TodoRepository) private todoRepo: TodoRepository) {}
+
 	public async createTodo(description: string): Promise<ITodo> {
-		throw new Error('Not Implemented');
+		return this.todoRepo.createTodoItem(description);
 	}
 }

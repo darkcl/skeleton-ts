@@ -6,6 +6,7 @@ import TYPES from './constant/types';
 
 import { ServiceLogger } from './utils/Logger/service.logger';
 import { TodoService } from './service/todo';
+
 import { LoggerMiddleware } from './middleware/logger/logger.middleware';
 import { CORSMiddleware } from './middleware/cors.middleware';
 import { ErrorMiddleware } from './middleware/error/error.middleware';
@@ -13,52 +14,60 @@ import { LocalizationMiddleware } from './middleware/localization.middleware';
 import helmet from 'helmet';
 
 import './controller/todo';
+import { MongoDBConnection } from './utils/mongodb/MongoConnection';
+import { TodoRepository } from './repositories/todo.repository';
 
-// load everything needed to the Container
-const container = new Container();
-container.bind<TodoService>(TYPES.TodoService).to(TodoService);
+(async () => {
+	// Connect to MongoDB
+	await MongoDBConnection.connect();
 
-// start the server
-const server = new InversifyExpressServer(container, null, {
-	rootPath: '/api/v1'
-});
+	// load everything needed to the Container
+	const container = new Container();
+	container.bind<TodoService>(TYPES.TodoService).to(TodoService);
+	container.bind<TodoRepository>(TYPES.TodoRepository).to(TodoRepository);
 
-server.setConfig((app) => {
-	app.use(
-		bodyParser.urlencoded({
-			extended: true
-		})
-	);
-	app.use(bodyParser.json());
+	// start the server
+	const server = new InversifyExpressServer(container, null, {
+		rootPath: '/api/v1'
+	});
 
-	// CORS
-	const whitelist: string[] = process.env.CORS !== undefined ? process.env.CORS.split(',') : [];
-	const cors: CORSMiddleware = new CORSMiddleware(whitelist);
-	app.use(cors.process());
-	app.options('/*', cors.processOption());
+	server.setConfig((app) => {
+		app.use(
+			bodyParser.urlencoded({
+				extended: true
+			})
+		);
+		app.use(bodyParser.json());
 
-	// Logger
-	const loggingMiddleware: LoggerMiddleware = new LoggerMiddleware();
-	app.use(loggingMiddleware.process());
+		// CORS
+		const whitelist: string[] = process.env.CORS !== undefined ? process.env.CORS.split(',') : [];
+		const cors: CORSMiddleware = new CORSMiddleware(whitelist);
+		app.use(cors.process());
+		app.options('/*', cors.processOption());
 
-	// Locale
-	const localeMiddleware: LocalizationMiddleware = new LocalizationMiddleware('en');
-	app.use(localeMiddleware.process());
+		// Logger
+		const loggingMiddleware: LoggerMiddleware = new LoggerMiddleware();
+		app.use(loggingMiddleware.process());
 
-	// Helmet
-	app.use(helmet());
-});
+		// Locale
+		const localeMiddleware: LocalizationMiddleware = new LocalizationMiddleware('en');
+		app.use(localeMiddleware.process());
 
-server.setErrorConfig((app) => {
-	// Error Logger
-	const errorMiddleware: ErrorMiddleware = new ErrorMiddleware();
-	app.use(errorMiddleware.process());
-});
+		// Helmet
+		app.use(helmet());
+	});
 
-const serverInstance = server.build();
+	server.setErrorConfig((app) => {
+		// Error Logger
+		const errorMiddleware: ErrorMiddleware = new ErrorMiddleware();
+		app.use(errorMiddleware.process());
+	});
 
-const port: string = process.env.PORT || '3000';
+	const serverInstance = server.build();
 
-serverInstance.listen(parseInt(port));
+	const port: string = process.env.PORT || '3000';
 
-ServiceLogger.shared().logMessage(`Server started on port ${port}`);
+	serverInstance.listen(parseInt(port));
+
+	ServiceLogger.shared().logMessage(`Server started on port ${port}`);
+})();
