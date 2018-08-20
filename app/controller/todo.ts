@@ -54,13 +54,8 @@ export class TodoController extends BaseHttpController {
 	@httpDelete('/:id')
 	public async deleteTodo(@request() req: Request, @response() res: Response) {
 		const result: ITodo = await this.todoService.getTodo(req.params.id);
-		console.log(result);
-		if (result !== null) {
-			await this.todoService.deleteTodo(req.params.id);
-			res.status(204);
-		} else {
-			throw new Error('Record Not Found');
-		}
+		await this.todoService.deleteTodo(req.params.id);
+		res.status(204);
 	}
 
 	@httpPost('/')
