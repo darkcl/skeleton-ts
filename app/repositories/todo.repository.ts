@@ -37,6 +37,7 @@ export class TodoRepository extends MongoRepository<ITodo> {
 			const objectId: ObjectID = new ObjectID(id);
 			const result: ITodo = await this.update(objectId, { description: description });
 			result.id = id;
+			result.description = description;
 			return result;
 		} catch (e) {
 			const err: ResponseError = e as ResponseError;
