@@ -12,7 +12,17 @@
     "watch-test": "nodemon -e ts --exec \"npm test\" --watch app --watch tests --watch package.json",
     "test-bamboo": "nyc mocha tests/**/*.test.ts tests/service/**/*.test.ts tests/controller/**/*.test.ts --reporter mocha-bamboo-reporter --reporter-options output=./report/mocha.json",
     "sonar-report-local": "npm run test-sonar;node_modules/sonarqube-scanner/dist/bin/sonar-scanner -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin",
-    "start": "node ./dist/server.js"
+    "start": "node ./dist/server.js",
+    "prettier:base": "prettier --parser typescript --single-quote",
+    "prettier:check": "npm run prettier:base -- --list-different \"app/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\"",
+    "prettier:write": "npm run prettier:base -- --write \"app/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\"",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run prettier:write",
+      "git add"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -53,7 +63,17 @@
     "nyc": "^11.7.1",
     "sonar-scanner": "^3.1.0",
     "sonarqube-scanner": "^2.0.2",
-    "ts-node": "^6.0.0"
+    "ts-node": "^6.0.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2",
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-react": "^7.11.1"
   },
   "nyc": {
     "include": [
