@@ -1,5 +1,5 @@
-import LazySocket = require("./lazy-socket.js");
-import url = require("url");
+import LazySocket = require('./lazy-socket.js');
+import url = require('url');
 
 interface CarbonClientOption {
   dsn?: string;
@@ -18,13 +18,13 @@ export class CarbonClient {
   public write(metrics, timestamp, cb) {
     this._lazyConnect();
 
-    var lines = "";
+    var lines = '';
     for (var path in metrics) {
       var value = metrics[path];
-      lines += [path, value, timestamp].join(" ") + "\n";
+      lines += [path, value, timestamp].join(' ') + '\n';
     }
 
-    this._socket.write(lines, "utf-8", cb);
+    this._socket.write(lines, 'utf-8', cb);
   }
 
   _lazyConnect() {

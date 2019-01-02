@@ -9,7 +9,7 @@ export interface MongoURIOption {
 
 export class MongoURIBuilder {
   static build(options: MongoURIOption): string {
-    let url = "mongodb://";
+    let url = 'mongodb://';
 
     if (options.username && options.password) {
       const username: string = encodeURIComponent(options.username);
@@ -18,7 +18,7 @@ export class MongoURIBuilder {
     }
 
     if (options.hosts && options.hosts.length > 0) {
-      url += options.hosts.map(host => `${host}:${options.port}`).join(",");
+      url += options.hosts.map(host => `${host}:${options.port}`).join(',');
     } else {
       url += `localhost:${options.port}`;
     }

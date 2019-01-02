@@ -1,10 +1,10 @@
-import { LogstashLogger } from "./Logstash/logstash.logger";
-import { getClient } from "./Graphite/client/client.store";
-import { GraphiteLoggable } from "./Graphite/graphite.interfaces";
-import os = require("os");
-import { LogstashLoggable, LogstashType } from "./Logstash/logger.interfaces";
+import { LogstashLogger } from './Logstash/logstash.logger';
+import { getClient } from './Graphite/client/client.store';
+import { GraphiteLoggable } from './Graphite/graphite.interfaces';
+import os = require('os');
+import { LogstashLoggable, LogstashType } from './Logstash/logger.interfaces';
 
-import * as measured from "measured-core";
+import * as measured from 'measured-core';
 
 class GraphiteConsoleLogger implements GraphiteLoggable {
   write(obj: any, cb: any) {
@@ -18,7 +18,7 @@ export class ServiceLogger {
 
   private static _shared: ServiceLogger;
 
-  private apiVersion = "v1";
+  private apiVersion = 'v1';
 
   static shared(): ServiceLogger {
     if (!this._shared) {
@@ -28,31 +28,28 @@ export class ServiceLogger {
   }
 
   constructor(
-    private graphiteHost: any = process.env.GRAPHITE_HOST ||
-      new GraphiteConsoleLogger(),
+    private graphiteHost: any = process.env.GRAPHITE_HOST || new GraphiteConsoleLogger(),
     private hostName: string = `main.${os.hostname()}`,
-    private appName: string = process.env.APPLICATION_NAME || "skeleton-ts",
-    public logstash: LogstashLoggable = new LogstashLogger(
-      process.env.LOG_DIR || "/tmp"
-    ),
+    private appName: string = process.env.APPLICATION_NAME || 'skeleton-ts',
+    public logstash: LogstashLoggable = new LogstashLogger(process.env.LOG_DIR || '/tmp'),
     private _stat = measured.createCollection(null)
   ) {
     this.graphite = getClient(this.graphiteHost);
   }
 
   graphiteEvent(name: string): string {
-    const env: string = process.env.HOST_ENV || "local";
+    const env: string = process.env.HOST_ENV || 'local';
     return `${env}.app.${this.appName}.${this.hostName}.${name}`;
   }
 
   logMessage(message: string) {
-    if (process.env.ENABLE_CONSOLE_LOG === "1") {
+    if (process.env.ENABLE_CONSOLE_LOG === '1') {
       console.log(message);
     }
     const logEvent = {
       message: message
     };
-    this.logstash.write(logEvent, LogstashType.APIAccessLog, "info");
+    this.logstash.write(logEvent, LogstashType.APIAccessLog, 'info');
   }
 
   logAPIRequest(req: any, res: any) {
@@ -61,7 +58,7 @@ export class ServiceLogger {
     delete headers.cookie;
     delete headers.authorization;
 
-    const startTime: Date = req["_startTime"];
+    const startTime: Date = req['_startTime'];
 
     const now = new Date();
     const duration: number = now.getTime() - startTime.getTime();
@@ -80,7 +77,7 @@ export class ServiceLogger {
       responseTime: duration,
       timestamp: startTime.getTime()
     };
-    this.logstash.write(logEvent, LogstashType.APIAccessLog, "info");
+    this.logstash.write(logEvent, LogstashType.APIAccessLog, 'info');
   }
 
   logAPIError(err: Error) {
@@ -105,26 +102,23 @@ export class ServiceLogger {
     return result;
   }
 
-  private logDuration(req: any, prefix: string = "api") {
-    const startTime: Date = req["_startTime"];
+  private logDuration(req: any, prefix: string = 'api') {
+    const startTime: Date = req['_startTime'];
     if (!startTime) {
-      console.log("no start time");
+      console.log('no start time');
       return;
     }
     const now = new Date();
     const duration: number = now.getTime() - startTime.getTime();
 
     const apiName =
-      req["_loggingPath"] !== undefined
-        ? req["_loggingPath"]
-        : [req.method, req.originalUrl.split("/").join("_")].join("_");
+      req['_loggingPath'] !== undefined
+        ? req['_loggingPath']
+        : [req.method, req.originalUrl.split('/').join('_')].join('_');
 
     const eventName = this.graphiteEvent(`${prefix}.${apiName}.usage`);
     this._stat.histogram(eventName).update(duration);
-    const result = this.eventHistogram(
-      eventName,
-      this._stat.toJSON()[eventName]
-    );
+    const result = this.eventHistogram(eventName, this._stat.toJSON()[eventName]);
     this.graphite.write(result, function(err) {});
   }
 
@@ -139,14 +133,12 @@ export class ServiceLogger {
     this.graphite.write(result, function(err) {});
   }
 
-  private logStatusCount(req: any, res: any, prefix: string = "api") {
+  private logStatusCount(req: any, res: any, prefix: string = 'api') {
     const apiName =
-      req["_loggingPath"] !== undefined
-        ? req["_loggingPath"]
-        : [req.method, req.originalUrl.split("/").join("_")].join("_");
-    const eventName = this.graphiteEvent(
-      `${prefix}.${apiName}.count.${res.statusCode}`
-    );
+      req['_loggingPath'] !== undefined
+        ? req['_loggingPath']
+        : [req.method, req.originalUrl.split('/').join('_')].join('_');
+    const eventName = this.graphiteEvent(`${prefix}.${apiName}.count.${res.statusCode}`);
     this._stat.histogram(eventName).update(1);
     const result = this.eventMeter(eventName, this._stat.toJSON()[eventName]);
     this.graphite.write(result, function(err) {});

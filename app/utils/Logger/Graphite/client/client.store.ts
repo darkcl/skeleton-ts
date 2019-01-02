@@ -1,10 +1,10 @@
-import { GraphiteLoggable } from "../graphite.interfaces";
-import { GraphiteClient } from "./lib/GraphiteClient";
+import { GraphiteLoggable } from '../graphite.interfaces';
+import { GraphiteClient } from './lib/GraphiteClient';
 
 const clients: { [key: string]: any } = {};
 
 export function getClient(client: GraphiteLoggable | string): GraphiteLoggable {
-  if (typeof client !== "string") {
+  if (typeof client !== 'string') {
     return client;
   }
 

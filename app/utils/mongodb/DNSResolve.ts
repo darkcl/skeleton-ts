@@ -1,4 +1,4 @@
-import dns = require("dns");
+import dns = require('dns');
 
 export class DNSResolver {
   static resovle(host: any): Promise<string[]> {

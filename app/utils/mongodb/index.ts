@@ -1,2 +1,2 @@
-export * from "./MongoUriBuilder";
-export * from "./DNSResolve";
+export * from './MongoUriBuilder';
+export * from './DNSResolve';

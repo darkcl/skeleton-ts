@@ -1,7 +1,7 @@
-import { LocalizedMessage } from "./interface";
+import { LocalizedMessage } from './interface';
 
 class enMessages implements LocalizedMessage {
-  Hello: 'Hello!'
+  Hello: 'Hello!';
 }
 
 export const messages = new enMessages();

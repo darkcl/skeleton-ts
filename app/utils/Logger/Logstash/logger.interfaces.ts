@@ -1,10 +1,10 @@
 export enum LogstashType {
-  APIAccessLog = "accessLog",
-  APIErrorLog = "errorLog",
-  ClamAVLog = "clamLog",
-  FreshclamLog = "freshClamLog",
-  ClamAVErrorLog = "clamErrLog",
-  FreshclamErrorLog = "freshClamErrLog"
+  APIAccessLog = 'accessLog',
+  APIErrorLog = 'errorLog',
+  ClamAVLog = 'clamLog',
+  FreshclamLog = 'freshClamLog',
+  ClamAVErrorLog = 'clamErrLog',
+  FreshclamErrorLog = 'freshClamErrLog'
 }
 
 export interface LogstashLoggable {

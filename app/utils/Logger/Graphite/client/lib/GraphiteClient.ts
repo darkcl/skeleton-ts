@@ -1,4 +1,4 @@
-import { CarbonClient } from "./CarbonClient";
+import { CarbonClient } from './CarbonClient';
 
 export class GraphiteClient {
   constructor(private _carbon: CarbonClient) {}
@@ -10,12 +10,12 @@ export class GraphiteClient {
 
   static flatten(obj, flat?, prefix?) {
     flat = flat || {};
-    prefix = prefix || "";
+    prefix = prefix || '';
 
     for (var key in obj) {
       var value = obj[key];
-      if (typeof value === "object") {
-        this.flatten(value, flat, prefix + key + ".");
+      if (typeof value === 'object') {
+        this.flatten(value, flat, prefix + key + '.');
       } else {
         flat[prefix + key] = value;
       }
@@ -25,12 +25,12 @@ export class GraphiteClient {
   }
 
   static appendTags(flatMetrics, tags) {
-    let tagSuffix = "";
+    let tagSuffix = '';
     let res = {};
 
     let flatTags = GraphiteClient.flatten(tags);
     for (var key in flatTags) {
-      tagSuffix += ";" + key + "=" + flatTags[key];
+      tagSuffix += ';' + key + '=' + flatTags[key];
     }
 
     for (var k in flatMetrics) {
@@ -53,7 +53,7 @@ export class GraphiteClient {
    * @param {function} cb
    */
   write(metrics, timestamp, cb) {
-    if (typeof timestamp === "function") {
+    if (typeof timestamp === 'function') {
       cb = timestamp;
       timestamp = null;
     }
@@ -68,10 +68,7 @@ export class GraphiteClient {
   }
 
   writeTagged(metrics, tags, timestamp, cb) {
-    const taggedMetrics = GraphiteClient.appendTags(
-      GraphiteClient.flatten(metrics),
-      tags
-    );
+    const taggedMetrics = GraphiteClient.appendTags(GraphiteClient.flatten(metrics), tags);
     this.write(taggedMetrics, timestamp, cb);
   }
 
