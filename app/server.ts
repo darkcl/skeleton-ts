@@ -1,73 +1,81 @@
-import 'reflect-metadata';
-import { InversifyExpressServer } from 'inversify-express-utils';
-import { Container } from 'inversify';
-import * as bodyParser from 'body-parser';
-import TYPES from './constant/types';
+import "reflect-metadata";
+import { InversifyExpressServer } from "inversify-express-utils";
+import { Container } from "inversify";
+import * as bodyParser from "body-parser";
+import TYPES from "./constant/types";
 
-import { ServiceLogger } from './utils/Logger/service.logger';
-import { TodoService } from './service/todo';
+import { ServiceLogger } from "./utils/Logger/service.logger";
+import { TodoService } from "./service/todo";
 
-import { LoggerMiddleware } from './middleware/logger/logger.middleware';
-import { CORSMiddleware } from './middleware/cors.middleware';
-import { ErrorMiddleware } from './middleware/error/error.middleware';
-import { LocalizationMiddleware } from './middleware/localization.middleware';
-import helmet from 'helmet';
+import { LoggerMiddleware } from "./middleware/logger/logger.middleware";
+import { CORSMiddleware } from "./middleware/cors.middleware";
+import { ErrorMiddleware } from "./middleware/error/error.middleware";
+import { LocalizationMiddleware } from "./middleware/localization.middleware";
+import helmet from "helmet";
 
-import './controller/todo';
-import { MongoDBConnection } from './utils/mongodb/MongoConnection';
-import { TodoRepository } from './repositories/todo.repository';
+import "./controller/todo";
+import { MongoDBConnection } from "./utils/mongodb/MongoConnection";
+import { TodoRepository } from "./repositories/todo.repository";
+import { LocalizedMessage } from "./locale/interface";
+import { Localization } from "./locale";
 
 (async () => {
-	// Connect to MongoDB
-	await MongoDBConnection.connect();
+  // Connect to MongoDB
+  await MongoDBConnection.connect();
 
-	// load everything needed to the Container
-	const container = new Container();
-	container.bind<TodoService>(TYPES.TodoService).to(TodoService);
-	container.bind<TodoRepository>(TYPES.TodoRepository).to(TodoRepository);
+  // load everything needed to the Container
+  const container = new Container();
+  container.bind<TodoService>(TYPES.TodoService).to(TodoService);
+  container.bind<TodoRepository>(TYPES.TodoRepository).to(TodoRepository);
+  container
+    .bind<LocalizationMiddleware>(TYPES.LocalizationMiddleware)
+    .to(LocalizationMiddleware);
 
-	// start the server
-	const server = new InversifyExpressServer(container, null, {
-		rootPath: '/api/v1'
-	});
+  const defaultMessage: LocalizedMessage = Localization.shared().defaultStore();
 
-	server.setConfig((app) => {
-		app.use(
-			bodyParser.urlencoded({
-				extended: true
-			})
-		);
-		app.use(bodyParser.json());
+  container
+    .bind<LocalizedMessage>(TYPES.LocalizedMessage)
+    .toConstantValue(defaultMessage);
 
-		// CORS
-		const whitelist: string[] = process.env.CORS !== undefined ? process.env.CORS.split(',') : [];
-		const cors: CORSMiddleware = new CORSMiddleware(whitelist);
-		app.use(cors.process());
-		app.options('/*', cors.processOption());
+  // start the server
+  const server = new InversifyExpressServer(container, null, {
+    rootPath: "/api/v1"
+  });
 
-		// Logger
-		const loggingMiddleware: LoggerMiddleware = new LoggerMiddleware();
-		app.use(loggingMiddleware.process());
+  server.setConfig(app => {
+    app.use(
+      bodyParser.urlencoded({
+        extended: true
+      })
+    );
+    app.use(bodyParser.json());
 
-		// Locale
-		const localeMiddleware: LocalizationMiddleware = new LocalizationMiddleware('en');
-		app.use(localeMiddleware.process());
+    // CORS
+    const whitelist: string[] =
+      process.env.CORS !== undefined ? process.env.CORS.split(",") : [];
+    const cors: CORSMiddleware = new CORSMiddleware(whitelist);
+    app.use(cors.process());
+    app.options("/*", cors.processOption());
 
-		// Helmet
-		app.use(helmet());
-	});
+    // Logger
+    const loggingMiddleware: LoggerMiddleware = new LoggerMiddleware();
+    app.use(loggingMiddleware.process());
 
-	server.setErrorConfig((app) => {
-		// Error Logger
-		const errorMiddleware: ErrorMiddleware = new ErrorMiddleware();
-		app.use(errorMiddleware.process());
-	});
+    // Helmet
+    app.use(helmet());
+  });
 
-	const serverInstance = server.build();
+  server.setErrorConfig(app => {
+    // Error Logger
+    const errorMiddleware: ErrorMiddleware = new ErrorMiddleware();
+    app.use(errorMiddleware.process());
+  });
 
-	const port: string = process.env.PORT || '3000';
+  const serverInstance = server.build();
 
-	serverInstance.listen(parseInt(port));
+  const port: string = process.env.PORT || "3000";
 
-	ServiceLogger.shared().logMessage(`Server started on port ${port}`);
+  serverInstance.listen(parseInt(port));
+
+  ServiceLogger.shared().logMessage(`Server started on port ${port}`);
 })();
