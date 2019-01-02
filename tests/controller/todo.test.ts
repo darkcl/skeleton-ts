@@ -11,6 +11,8 @@ import { MongoDBConnection } from '../../app/utils/mongodb/MongoConnection';
 
 import * as httpMocks from 'node-mocks-http';
 import { ITodo } from '../../app/repositories/entities/todo';
+import { Localization } from '../../app/locale';
+import { LocalizedMessage } from '../../app/locale/interface';
 
 describe('TodoController', () => {
   let controller: TodoController;
@@ -29,7 +31,8 @@ describe('TodoController', () => {
       await mongoServer.getUri()
     );
     service = new TodoService(new TodoRepository());
-    controller = new TodoController(service);
+    const store: LocalizedMessage = Localization.shared('en').of('en');
+    controller = new TodoController(service, store);
   });
 
   it('should get todos', async () => {
