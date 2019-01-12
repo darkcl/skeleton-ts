@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "allowJs": true,
-    "types": [ "node", "mocha", "chai" ]
+    "types": ["node", "mocha", "chai"]
   },
   "compileOnSave": false,
   "include": ["app/**/*"],
