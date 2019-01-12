@@ -1,23 +1,15 @@
 import 'reflect-metadata';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import { Container } from 'inversify';
 import * as bodyParser from 'body-parser';
-import TYPES from './constant/types';
 
 import { ServiceLogger } from './utils/Logger/service.logger';
-import { TodoService } from './service/todo';
 
 import { LoggerMiddleware } from './middleware/logger/logger.middleware';
 import { CORSMiddleware } from './middleware/cors.middleware';
 import { ErrorMiddleware } from './middleware/error/error.middleware';
-import { LocalizationMiddleware } from './middleware/localization.middleware';
 import helmet from 'helmet';
 
 import './controller/todo';
-import { MongoDBConnection } from './utils/mongodb/MongoConnection';
-import { TodoRepository } from './repositories/todo.repository';
-import { LocalizedMessage } from './locale/interface';
-import { Localization } from './locale';
 import { AppContainer } from './common/container';
 
 (async () => {
