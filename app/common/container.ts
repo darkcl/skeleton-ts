@@ -15,8 +15,10 @@ export class AppContainer {
     container.bind<TodoRepository>(TYPES.TodoRepository).to(TodoRepository);
     container.bind<LocalizationMiddleware>(TYPES.LocalizationMiddleware).to(LocalizationMiddleware);
 
-    const defaultMessage: LocalizedMessage = Localization.shared().defaultStore();
+    const localeManger: Localization = new Localization('en');
+    container.bind<Localization>(TYPES.Localization).toConstantValue(localeManger);
 
+    const defaultMessage: LocalizedMessage = localeManger.defaultStore();
     container.bind<LocalizedMessage>(TYPES.LocalizedMessage).toConstantValue(defaultMessage);
     return container;
   }
