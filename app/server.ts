@@ -18,23 +18,17 @@ import { MongoDBConnection } from './utils/mongodb/MongoConnection';
 import { TodoRepository } from './repositories/todo.repository';
 import { LocalizedMessage } from './locale/interface';
 import { Localization } from './locale';
+import { AppContainer } from './common/container';
 
 (async () => {
   // Connect to MongoDB
   await MongoDBConnection.connect();
 
   // load everything needed to the Container
-  const container = new Container();
-  container.bind<TodoService>(TYPES.TodoService).to(TodoService);
-  container.bind<TodoRepository>(TYPES.TodoRepository).to(TodoRepository);
-  container.bind<LocalizationMiddleware>(TYPES.LocalizationMiddleware).to(LocalizationMiddleware);
-
-  const defaultMessage: LocalizedMessage = Localization.shared().defaultStore();
-
-  container.bind<LocalizedMessage>(TYPES.LocalizedMessage).toConstantValue(defaultMessage);
+  const appContainer = new AppContainer();
 
   // start the server
-  const server = new InversifyExpressServer(container, null, {
+  const server = new InversifyExpressServer(appContainer.load(), null, {
     rootPath: '/api/v1'
   });
 
