@@ -5,10 +5,19 @@ import { DNSResolver } from './DNSResolve';
 export class MongoDBConnection {
   private static isConnected: boolean = false;
   private static db: Db;
+  private static client: MongoClient;
 
   public static getDb(): Db {
     if (this.isConnected) {
       return this.db;
+    } else {
+      throw Error('MongoDB not connected');
+    }
+  }
+
+  public static getClient(): MongoClient {
+    if (this.isConnected) {
+      return this.client;
     } else {
       throw Error('MongoDB not connected');
     }
@@ -33,11 +42,11 @@ export class MongoDBConnection {
         password: mongoPassword,
         rsName: rsName
       });
-    const client: MongoClient = await MongoClient.connect(
+    this.client = await MongoClient.connect(
       mongoDbUri,
       { useNewUrlParser: true }
     );
-    this.db = client.db(mongoDbName);
+    this.db = this.client.db(mongoDbName);
     this.isConnected = true;
     return this.db;
   }

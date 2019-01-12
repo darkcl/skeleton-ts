@@ -21,14 +21,11 @@ import { Localization } from './locale';
 import { AppContainer } from './common/container';
 
 (async () => {
-  // Connect to MongoDB
-  await MongoDBConnection.connect();
-
   // load everything needed to the Container
   const appContainer = new AppContainer();
-
+  const container = await appContainer.load();
   // start the server
-  const server = new InversifyExpressServer(appContainer.load(), null, {
+  const server = new InversifyExpressServer(container, null, {
     rootPath: '/api/v1'
   });
 
@@ -61,10 +58,7 @@ import { AppContainer } from './common/container';
   });
 
   const serverInstance = server.build();
-
   const port: string = process.env.PORT || '3000';
-
   serverInstance.listen(parseInt(port));
-
   ServiceLogger.shared().logMessage(`Server started on port ${port}`);
 })();

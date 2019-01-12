@@ -1,15 +1,15 @@
 import { MongoRepository } from './base/mongo.repository';
 import { ITodo, TodoMongoEntity } from './entities/todo';
-import { MongoDBConnection } from '../utils/mongodb/MongoConnection';
-import { injectable } from 'inversify';
-import { ObjectID } from 'mongodb';
+import { injectable, inject } from 'inversify';
+import { ObjectID, MongoClient } from 'mongodb';
 import { ResponseError, ErrorDomain, ErrorCode } from '../common/error_object';
+import TYPES from '../constant/types';
 
 @injectable()
 export class TodoRepository extends MongoRepository<ITodo> {
-  constructor() {
+  constructor(@inject(TYPES.MongoClient) private client: MongoClient) {
     super();
-    const db = MongoDBConnection.getDb();
+    const db = this.client.db();
     this.collection = db.collection('todo');
   }
 
