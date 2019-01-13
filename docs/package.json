@@ -4,9 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "doc": "aglio -i spec.apib -o index.html"
+    "doc": "aglio -i spec.apib -o index.html",
+    "mock": "drakov -f spec.apib"
   },
   "devDependencies": {
-    "aglio": "^2.3.0"
+    "aglio": "^2.3.0",
+    "drakov": "^1.0.4"
   }
 }

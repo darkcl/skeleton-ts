@@ -1,4 +1,4 @@
-.PHONY: all build doc test itest push push-latest clean clean-dev dev
+.PHONY: all build doc mock test itest push push-latest clean clean-dev dev
 
 APP_NAME=$(shell cat package.json  | jq -r '.name' | tr '[:upper:]' '[:lower:]')
 APP_VERSION=$(shell cat package.json  | jq -r '.version')
@@ -40,6 +40,10 @@ dev:
 doc:
 	@echo Generating API Documentation
 	@cd ./docs && yarn doc && open ./index.html
+
+mock:
+	@echo Start Mock Server
+	@cd ./docs && yarn mock
 
 clean-dev:
 	@echo Clean up
