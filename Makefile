@@ -39,7 +39,7 @@ dev:
 
 doc:
 	@echo Generating API Documentation
-	@cd ./docs && yarn doc
+	@cd ./docs && yarn doc && open ./index.html
 
 clean-dev:
 	@echo Clean up

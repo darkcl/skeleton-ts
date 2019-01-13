@@ -2,12 +2,69 @@ FORMAT: 1A
 
 # skeleton-ts
 
-## Group Health Check 
+# Group Todo
 
-### Ping [GET /ping]
+Resources related to Todo in the API.
+
+## Todo Collection [/todo]
+
+### Get Todo List [GET]
+
++ Response 200
+
+    + Attribute (Todo List Response)
+
+### Get Todo List [GET /todo/{id}]
+
++ Parameters
+
+    + id: `123` (string)
+
+        Todo Item ID
+
++ Response 200
+
+    + Attribute (Todo Response)
+
+### Create Todo Item [POST]
+
++ Attribute (Todo Base)
+
++ Request (application/json)
+
++ Response 201
+
+
+# Group Health Check 
+
+## Ping [GET /ping]
 
 + Response 200 (application/json; charset=utf-8)
 
     + Body
 
             {"message": "OK"}
+
+# Data Structures
+
+## Todo Response (object)
+
++ meta (object)
+
+    + status: 200 (number)
+
++ contents (Todo Base)
+
+## Todo List Response (object)
+
++ meta (object)
+
+    + status: 200 (number)
+
++ contents (array[Todo Base])
+
+## Todo Base (object)
+
++ description: `Hello World!` (string)
+
+    Todo item description
