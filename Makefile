@@ -1,4 +1,4 @@
-.PHONY: all build test itest push push-latest clean clean-dev dev
+.PHONY: all build doc test itest push push-latest clean clean-dev dev
 
 APP_NAME=$(shell cat package.json  | jq -r '.name' | tr '[:upper:]' '[:lower:]')
 APP_VERSION=$(shell cat package.json  | jq -r '.version')
@@ -36,6 +36,10 @@ dev:
 	@echo Start Development Environment
 	@docker-compose build
 	@docker-compose up api
+
+doc:
+	@echo Generating API Documentation
+	@cd ./docs && yarn doc
 
 clean-dev:
 	@echo Clean up

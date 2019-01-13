@@ -1,0 +1,12 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "doc": "aglio -i spec.apib -o index.html"
+  },
+  "devDependencies": {
+    "aglio": "^2.3.0"
+  }
+}
